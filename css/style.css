@@ -1,0 +1,10 @@
+/* 
+ * Basic stylesheet for IFC Viewer
+ */
+
+div .bimdata-viewer {
+	margin-top: 50px;
+	position: absolute;
+	top:0;
+	z-index:1041;
+}

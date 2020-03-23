@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>files_ifcviewer</id>
+    <name>3D Viewer for IFC files</name>
+    <summary>3D Viewer for IFC modes that's opengl capable</summary>
+    <description>Adds support for IFC/glt files</description>
+    <version>1.0.0</version>
+    <licence>agpl</licence>
+    <author mail="gaguilar@level2crm.com">Gonzalo Aguilar Delgado</author>
+    <category>tools</category>
+    <website>git@github.com:gadLinux/files_ifcviewer.git</website>
+    <bugs>git@github.com:gadLinux/files_ifcviewer.git/issues</bugs>
+    <screenshot>git@github.com:gadLinux/files_ifcviewer.git/master/screenshots/screenshot1.png</screenshot>
+    <dependencies>
+        <nextcloud min-version="18" max-version="18"/>
+    </dependencies>
+</info>
