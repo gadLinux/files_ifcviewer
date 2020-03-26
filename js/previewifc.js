@@ -142,53 +142,35 @@
 		 * @private
 		 */
 		_extendFileActions: function(fileActions) {
+			var registerMimeTypes = ['application/x-step', 'model/gltf-binary'];
 			var self = this;
-			fileActions.registerAction({
-				name: 'viewifc',
-				displayName: 'ModelViewer',
-				mime: 'model/gltf-binary',
-				permissions: OC.PERMISSION_READ,
-				actionHandler: function(fileName, context) {
-					var downloadUrl = context.fileList.getDownloadUrl(fileName, context.dir);
-					if (downloadUrl && downloadUrl !== '#') {
-//						const hostUrl = context.fileList.filesClient.getClient().resolveUrl(context.dir);
-						const hostUrl = context.fileList.filesClient.getClient().resolveUrl("/");
-						var model=context.fileList.getModelForFile(fileName);
-						var fileContext = {
-							hostUrl: hostUrl + "index.php/apps/files_ifcviewer/api",
-							downloadUrl: downloadUrl,
-							cid: model.cid,
-							id: model.id,
-							attributes: model.attributes,
-						};
-						self.show(fileContext, true);
-					}
-				}
-			});
-			fileActions.setDefault('model/gltf-binary', 'viewifc');
-			fileActions.registerAction({
-				name: 'viewifc',
-				displayName: 'ModelViewer',
-				mime: 'model/xkt-binary',
-				permissions: OC.PERMISSION_READ,
-				actionHandler: function(fileName, context) {
-					var downloadUrl = context.fileList.getDownloadUrl(fileName, context.dir);
-					if (downloadUrl && downloadUrl !== '#') {
-						const hostUrl = context.fileList.filesClient.getClient().resolveUrl("/");
-						var model=context.fileList.getModelForFile(fileName);
-						var fileContext = {
-							hostUrl: hostUrl + "index.php/apps/files_ifcviewer/api",
-							downloadUrl: downloadUrl,
-							cid: model.cid,
-							id: model.id,
-							attributes: model.attributes,
-						};
-						self.show(fileContext, true);
-					}
-				}
-			});
-			fileActions.setDefault('model/xkt-binary', 'viewifc');
+			var index = 1;
+//			const hostUrl = context.fileList.filesClient.getClient().resolveUrl(context.dir);
 			
+			for (const mimeType of registerMimeTypes) {
+				fileActions.registerAction({
+					name: 'viewifc_'+index,
+					displayName: 'ModelViewer',
+					mime: mimeType,
+					permissions: OC.PERMISSION_READ,
+					actionHandler: function(fileName, context) {
+						const hostUrl = context.fileList.filesClient.getClient().resolveUrl("/");
+						const downloadUrl = context.fileList.getDownloadUrl(fileName, context.dir);
+						if (downloadUrl && downloadUrl !== '#') {
+							var model=context.fileList.getModelForFile(fileName);
+							var fileContext = {
+								hostUrl: hostUrl + "index.php/apps/files_ifcviewer/api",
+								downloadUrl: downloadUrl,
+								cid: model.cid,
+								id: model.id,
+								attributes: model.attributes,
+							};
+							self.show(fileContext, true);
+						}
+					}
+				});
+				fileActions.setDefault(mimeType, 'viewifc_'+index++	);
+			}
 		}
 	};
 
