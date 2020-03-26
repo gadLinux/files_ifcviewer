@@ -1,11 +1,11 @@
 {
-    "name": "Files Three",
+    "name": "Files IFC viewer",
     "description": "3D viewer for nextcloud",
     "type": "project",
     "license": "AGPL",
     "authors": [
         {
-            "name": "Vinzenz Rosenkranz"
+            "name": "Gonzalo Aguilar Delgado"
         }
     ],
     "require": {},
