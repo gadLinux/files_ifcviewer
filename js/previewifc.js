@@ -17,27 +17,91 @@
 	 */
 	OCA.FilesIFCViewer.BimData = {
 		viewerContext: {
+			server: {},
 			viewer: {},
-			store: {},
 			eventHub: {},
 			setAccessToken: {}
 		},
 		init: function(fileContext) {
+			/*
+			var fileContext = {
+					hostUrl: hostUrl + "index.php/apps/files_ifcviewer/api",
+					downloadUrl: downloadUrl,
+					cid: model.cid,
+					id: model.id,
+					attributes: model.attributes,
+				};
+			*/
+			// Server client will load data from the file systems
+			this.viewerContext.server = new Server({
+	            dataDir: fileContext.hostUrl,
+	        });
+			
+			this.viewerContext.server.getGeometry = function(projectId, modelId, done, error) {
+                const url = "/remote.php/webdav/admin/factory-vf83598797856cbd0013f0732d69f3e05.xkt";
+                utils.loadArraybuffer(url, done, error);
+            }
+			
+	        // Create  BIMViewer that loads data via the Server
+			// $('#myCanvas')?
+			this.viewerContext.viewer = new BIMViewer(this.viewerContext.server, {
+	            canvasElement: document.getElementById("myCanvas"), // WebGL canvas
+	            explorerElement: document.getElementById("myExplorer"), // Left panel
+	            toolbarElement: document.getElementById("myToolbar"), // Toolbar
+	            navCubeCanvasElement: document.getElementById("myNavCubeCanvas"),
+	            busyModelBackdropElement: document.querySelector(".xeokit-busy-modal-backdrop")
+	        });
+			
+	        // Create tooltips on various HTML elements created by BIMViewer
+	        tippy('[data-tippy-content]', {
+	            appendTo: function () {
+	                return document.querySelector('#bimdata-viewer')
+	            }
+	        });
+	        
+	        this.viewerContext.viewer.setConfigs({});
+	        
+	        /*
 			const cfg = {
 		         cloudId: 1,
-		         projectId: 100,
+		         projectId: 100,myViewer
 		         ifcIds: [fileContext.id],
 		         apiUrl: fileContext.hostUrl,
 		         bimdataPlugins: {
 		           bcf:false
 		         }
 			};
-			const accessToken = 'DEMO_TOKEN';
-			const {viewer, store, eventHub, setAccessToken} = initBIMDataViewer('bimdata-viewer', accessToken, cfg);
-			this.viewerContext.viewer = viewer;
-			this.viewerContext.store = store;
-			this.viewerContext.eventHub = eventHub;
-			this.viewerContext.setAccessToken = setAccessToken;
+	        */
+	        // Load a project
+	        this.viewerContext.viewer.loadProject("1", () => {
+	        	// The project may load one or models initially.
+
+	        	// Withe request params, we can also specify:
+	        	//  - models to load
+	        	// - explorer tab to open
+//	        	const modelId = requestParams.modelId;
+//	        	if (modelId) {
+	        	this.viewerContext.viewer.loadModel("" + fileContext.id);
+//	        	}
+//	        	const tab = requestParams.tab;myViewer
+//	        	if (tab) {
+//	        		bimViewer.openTab(tab);
+//	        	}
+	        	//
+//	        	window.setInterval((function () {
+//	        		var lastHash = "";
+//	        		return function () {
+//	        			const currentHash = window.location.hash;
+//	        			if (currentHash !== lastHash) {
+//	        				parseHashParams();
+//	        				lastHash = currentHash;
+//	        			}
+//	        		};
+//	        	})(), 200);
+	        },
+	        (errorMsg) => {
+	        	console.error(errorMsg);
+	        });
 			console.log("Done!");
 		},
 		shutdown: function() {
@@ -82,7 +146,7 @@
 			var self = this;
 			var shown = true;
 			var viewer = OC.generateUrl('/apps/files_ifcviewer/?file={file}', {file: fileContext.downloadUrl});
-			var $renderedTmpl = $('<div id="bimdata-viewer"/>');
+			var $renderedTmpl = $('<div id="bimdata-viewer" class="xeokit-busy-modal-backdrop"><div id="myExplorer" class="active"></div><div id="myContent"><div id="myToolbar"></div><canvas id="myCanvas"></canvas></div></div><canvas id="myNavCubeCanvas"></canvas>');
 
 			if(isFileList === true) {
 				FileList.setViewerMode(true);

@@ -46,7 +46,41 @@ class ApiController extends Controller
      */
     public function serve()
     {
-        return new DataResponse("{}");
+        
+        $responseModel = [
+            "id"=> "182",
+            "name"=> "Duplex",
+            "models"=> [
+            [
+                "id"=> "182",
+                "name"=> "Duplex Design"
+            ]
+            ],
+            "viewerConfigs"=> [
+            "cameraNear"=> "0.05",
+            "cameraFar"=> "3000.0",
+            "saoEnabled"=> "true",
+            "saoBias"=> "0.5",
+            "saoIntensity"=> "0.5",
+            "saoScale"=> "1200.0",
+            "saoKernelRadius"=> "100"
+            ],
+            "viewerContent"=> [
+            "modelsLoaded"=> [[
+                "design"
+            ]]
+            ]
+        ];
+        
+//         $responseModel = [
+//             "projects" => [[
+//                 "id" => "182",
+//                 "name" => "182",
+//             ]],
+//         ];
+        $response = new JSONResponse($responseModel);
+        // $response->cacheFor(3600);
+        return $response;
     }
 
     /**
