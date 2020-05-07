@@ -48,36 +48,51 @@ class ApiController extends Controller
     {
         
         $responseModel = [
-            "id"=> "182",
+            "projects" => [[
+                "id" => "123",
+                "name" => "123",
+            ]],
+        ];
+        $response = new JSONResponse($responseModel);
+        // $response->cacheFor(3600);
+        return $response;
+    }
+    
+    /**
+     *
+     * @PublicPage
+     * @NoCSRFRequired
+     *
+     * @param bool $minmode
+     * @return TemplateResponse
+     */
+    public function serveProjectInfo(string $projectid)
+    {
+        
+        $responseModel = [
+            "id"=> $projectid,
             "name"=> "Duplex",
             "models"=> [
-            [
-                "id"=> "182",
-                "name"=> "Duplex Design"
-            ]
+                [
+                    "id"=> "duplex",
+                    "name"=> "Modelo Duplex"
+                ]
             ],
             "viewerConfigs"=> [
-            "cameraNear"=> "0.05",
-            "cameraFar"=> "3000.0",
-            "saoEnabled"=> "true",
-            "saoBias"=> "0.5",
-            "saoIntensity"=> "0.5",
-            "saoScale"=> "1200.0",
-            "saoKernelRadius"=> "100"
+                "cameraNear"=> "0.05",
+                "cameraFar"=> "3000.0",
+                "saoEnabled"=> "true",
+                "saoBias"=> "0.5",
+                "saoIntensity"=> "0.5",
+                "saoScale"=> "1200.0",
+                "saoKernelRadius"=> "100"
             ],
             "viewerContent"=> [
-            "modelsLoaded"=> [[
-                "design"
-            ]]
+                "modelsLoaded"=> [
+                    "duplex"
+                ]
             ]
         ];
-        
-//         $responseModel = [
-//             "projects" => [[
-//                 "id" => "182",
-//                 "name" => "182",
-//             ]],
-//         ];
         $response = new JSONResponse($responseModel);
         // $response->cacheFor(3600);
         return $response;

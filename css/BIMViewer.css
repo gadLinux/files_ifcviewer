@@ -16,29 +16,19 @@
     position: relative;
     display: inline-flex;
     vertical-align: middle;
-    margin-right: 1.5rem !important;
+    margin-right: 1.2rem !important;
     pointer-events: none;
-}
-
-.xeokit-logo-image {
-    position: fixed;
-    bottom: -40px;
-}
-
-.xeokit-logo-image img {
-    width: 360px;
-    height: 254px;
 }
 
 .xeokit-btn {
     position: relative;
     flex: 1 1 auto;
-    /* color: #03103F; */
-    background-color: #fad116;
+    color: #03103F;
+    background-color: white;
     text-align: center;
     vertical-align: middle;
-    border: none;
-    /* padding: 0.35rem .35rem; */
+    border: 2px solid #1d2453;
+    padding: .375rem .75rem;
     border-radius: .25rem;
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     -webkit-appearance: button;
@@ -47,37 +37,36 @@
     box-sizing: border-box;
     align-items: flex-start;
     pointer-events: all;
-    width: 48px;
 }
 
 .xeokit-btn.disabled {
-    /* opacity: .55; */
-    /* color: black; */
-    /* border: 2px solid #6c757d !important; */
+    opacity: .55;
+    color: #99A4AD;
+    border: 2px solid #6c757d !important;
 }
 
 .xeokit-btn.active {
     color: #fff;
-    background-color: #dddedf;
-    /* border-color: #03103F; */
+    background-color: #03103F;
+    border-color: #03103F;
 }
 
 .xeokit-btn:hover {
-    /* color: #477dca;
-    border: 2px solid #477dca; */
+    color: #477dca;
+    border: 2px solid #477dca;
 }
 
 .xeokit-btn.active:hover {
     /*color: transparent;*/
     color: white;
-    /* background: #477dca;
-    border: 2px solid #477dca; */
+    background: #477dca;
+    border: 2px solid #477dca;
 }
 
 .xeokit-btn.disabled:hover {
     opacity: .55;
-    /* color: #99A4AD;
-    border: 2px solid #6c757d !important; */
+    color: #99A4AD;
+    border: 2px solid #6c757d !important;
 }
 
 /*  Tabs    */
@@ -132,9 +121,8 @@
 @media (min-width: 40em) {
     .xeokit-tabs .xeokit-tab.active .xeokit-tab-btn {
         background-color: transparent;
-        border-bottom: #fad116 solid 1px;
+        border-bottom: #CFCFCF solid 3px;
         margin-bottom: -1px;
-        color: #fad116;
     }
 }
 
@@ -146,16 +134,18 @@
     font-size: 16px;
     background-color: transparent;
     border-top: 2px solid #dcdcdc;
-    color: #ffffff;
+    color: #CFCFCF;
     display: block;
     font-weight: bold;
-    padding: 0.75em 15px;
+    padding: 0.75em 5px;
+    padding-left: 0;
+    padding-right: 10px;
     text-decoration: none;
 }
 
 @media (min-width: 40em) {
     .xeokit-tabs .xeokit-tab-btn {
-        font-size: 17px;
+        font-size: 20px;
         font-weight: normal;
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
@@ -165,7 +155,7 @@
 }
 
 .xeokit-tabs .xeokit-tab-btn:hover {
-    color: #fad116;
+    color: #477dca;
 }
 
 .xeokit-tabs .xeokit-tab-btn:focus {
@@ -173,7 +163,7 @@
 }
 
 .xeokit-tabs .xeokit-tab-content {
-    background: #010101;
+    background: #03103F;
     display: none;
     padding-top: 2em;
     padding-left: 0;
@@ -199,32 +189,31 @@
     font-weight: normal;
     position: relative;
     flex: 1 1 auto;
-    /* color: #000000; */
-    background-color: #fad116;
+    color: #CFCFCF;
+    background-color: transparent;
     text-align: center;
     vertical-align: middle;
-    /* border: 2px solid #CFCFCF; */
-    padding: .25rem .45rem;
+    border: 2px solid #CFCFCF;
+    padding: .75rem .75rem;
     margin: 0 5px 10px 0;
-    border-radius: .25rem;
+    border-radius: .35rem;
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     -webkit-appearance: button;
     overflow: visible;
     box-sizing: border-box;
     align-items: flex-start;
     /*font: 400 13.3333px Arial;*/
-    width: 100px;
 }
 
 .xeokit-tabs .xeokit-btn:hover {
-    /* color: #477dca; */
-    /* border: 2px solid white; */
+    color: #477dca;
+    border: 2px solid #477dca;
     /*background: black;*/
 }
 
 .xeokit-tabs .xeokit-tab-btn.disabled {
     opacity: .55;
-    /* color: #99A4AD; */
+    color: #99A4AD;
 }
 
 .xeokit-modelsTab {
@@ -243,15 +232,15 @@
 .xeokit-modelsTab .xeokit-form-check span {
     display: inline-block;
     color: #ffff;
-    /* background-color: #03103F; */
+    background-color: #03103F;
     padding-left: 3px;
     width: calc(100% - 30px);
     vertical-align: middle;
 }
 
 .xeokit-modelsTab .xeokit-form-check span.disabled {
-    color: #f9f9f9;
-    /* background-color: #03103F; */
+    color: #99A4AD;
+    background-color: #03103F;
 }
 
 .xeokit-modelsTab .xeokit-form-check span:hover {
@@ -263,7 +252,7 @@
 
 .xeokit-modelsTab .xeokit-form-check span.disabled:hover {
     color: #99A4AD;
-    /* background-color: #03103F; */
+    background-color: #03103F;
     cursor: default;
 }
 
@@ -485,7 +474,7 @@
 .xeokit-tree-panel {
     overflow-y: auto;
     overflow-x: hidden;
-    height: calc(100% - 230px);
+    height: calc(100% - 150px);
 }
 
 /* Context menu */
