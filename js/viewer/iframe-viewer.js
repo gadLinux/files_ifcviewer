@@ -52,7 +52,7 @@ window.onload = function () {
     });
 
     bimViewer.getProjectsInfo((projectsInfo) => {
-        console.log(JSON.stringify(projectsInfo, null, "\t"));
+        //console.log(JSON.stringify(projectsInfo, null, "\t"));
     });
 
 

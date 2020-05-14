@@ -11,8 +11,9 @@
 
 namespace OCA\Files_Ifcviewer\AppInfo;
 
-return ['routes' => [
-	['name' => 'Display#showIFCViewer', 'url' => '/', 'verb' => 'GET'],
+return [/* 'resources' => ['img' => ['url' => '/img'] ], */'routes' => [
+	['name' => 'Display#showIFrame', 'url' => '/iframe', 'verb' => 'GET'],
+	['name' => 'Display#showViewer', 'url' => '/', 'verb' => 'GET'],
     ['name' => 'Api#serve', 'url' => '/api/', 'verb' => 'GET'],
     ['name' => 'Api#serveProjectInfo', 'url' => '/api/projects/{projectid}/index.json', 'verb' => 'GET'],
     ['name' => 'Api#ifc', 'url' => '/api/cloud/{cloudid}/project/{projectid}/ifc/{ifcid}', 'verb' => 'GET'],

@@ -6,11 +6,18 @@ function bindEvent(element, eventName, eventHandler) {
         element.attachEvent('on' + eventName, eventHandler);
     }
 }
-var fileId = 1;
+function getRequestParams() {
+        var vars = {};
+        window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m, key, value) => {
+            vars[key] = value;
+        });
+        return vars;
+}
+
 var baseUrl = OC.generateUrl('/apps/files_ifcviewer_annotation');
-var iframeEl = document.getElementById('viewer-iframe');
+//var iframeEl = document.getElementById('ifcframe');
 var sendMessage = function(msg) {
-    iframeEl.contentWindow.postMessage(msg, '*');
+    ($('#ifcframe')[0]).contentWindow.postMessage(msg, '*');
 };
 var createAnnotation = function (fileId, annotation) {
    
@@ -21,8 +28,8 @@ var updateAnnotation = function (fileId, annotation) {
 		    url: baseUrl + '/annotations/'+annotation.viewer_id.replace("issue_",""),
 		    type: 'PUT',
 		    contentType: 'application/json',
-		    data: JSON.stringify({ file_id: fileId, title: annotation.title, description: annotation.description, wx: annotation.wPos[0], wy: annotation.wPos[1], wz: annotation.wPos[2] })
-		}).done(function (response) {		    
+		    data: JSON.stringify({ file_id: fileId, title: annotation.title, description: annotation.description, status: annotation.status, wx: annotation.wPos[0], wy: annotation.wPos[1], wz: annotation.wPos[2] })
+		}).done(function (response) {
 		}).fail(function (response, code) {
 		    // handle failure
 		});
@@ -33,7 +40,8 @@ var updateAnnotation = function (fileId, annotation) {
 		    contentType: 'application/json',
 		    data: JSON.stringify({ file_id: fileId, title: annotation.title, description: annotation.description, wx: annotation.wPos[0], wy: annotation.wPos[1], wz: annotation.wPos[2] })
 		}).done(function (response) {
-			var data = response;			
+			var data = response;
+			data.viewer_id = annotation.viewer_id;
 		    sendMessage({ op: 'update-annotation', data: response})
 		}).fail(function (response, code) {
 		    // handle failure
@@ -58,6 +66,7 @@ var getAnnotations = function (fileId) {
 // Listen to message from child window
 bindEvent(window, 'message', function (e) {
 	var msg = e.data;
+	var fileId = getRequestParams()["fileId"];
 	if(msg.op == 'get-annotation-list') {
 		getAnnotations(fileId);
 	} else if (msg.op == 'create-annotation') {

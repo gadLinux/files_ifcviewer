@@ -8,65 +8,85 @@
     justify-content: flex-start;
     background: transparent;
     pointer-events: none;
-    padding: 10px;
-
+    padding: 8px;
+    padding-left: 35px;
 }
 
 .xeokit-btn-group {
     position: relative;
     display: inline-flex;
     vertical-align: middle;
-    margin-right: 1.2rem !important;
+    margin-right: 1.5rem !important;
     pointer-events: none;
+}
+
+.tippy-tooltip {
+    background-color: #0c0c0c;
+    color: rgb(253, 218,37);
+    z-index: 3000000000;
+}
+
+.tippy-popper[x-placement^=top] [x-arrow] {
+    border-top: 7px solid #0c0c0c;
+}
+
+.xeokit-logo-image {
+    padding: 10px;
+    padding-left: 15px;
+}
+
+.xeokit-logo-image img {
+    height: 50px;
 }
 
 .xeokit-btn {
     position: relative;
     flex: 1 1 auto;
-    color: #03103F;
-    background-color: white;
-    text-align: center;
+    background-color: rgb(253, 218,37);
+    /* text-align: center;
     vertical-align: middle;
-    border: 2px solid #1d2453;
-    padding: .375rem .75rem;
+    border: none; */
     border-radius: .25rem;
-    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    /* transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     -webkit-appearance: button;
-    overflow: visible;
+    overflow: visible; */
     margin: 0 2px 0 0;
-    box-sizing: border-box;
-    align-items: flex-start;
+    /* box-sizing: border-box;
+    align-items: flex-start; */
     pointer-events: all;
+    width: 45px;
+    height: 45px;
+    padding: 2px;
 }
 
 .xeokit-btn.disabled {
-    opacity: .55;
-    color: #99A4AD;
-    border: 2px solid #6c757d !important;
+    /* opacity: .55; */
+    /* color: black; */
+    /* border: 2px solid #6c757d !important; */
 }
 
 .xeokit-btn.active {
     color: #fff;
-    background-color: #03103F;
-    border-color: #03103F;
+    background-color: #dddedf;
+    /* border-color: #03103F; */
 }
 
 .xeokit-btn:hover {
-    color: #477dca;
-    border: 2px solid #477dca;
+    /* color: #477dca;
+    border: 2px solid #477dca; */
 }
 
 .xeokit-btn.active:hover {
     /*color: transparent;*/
     color: white;
-    background: #477dca;
-    border: 2px solid #477dca;
+    /* background: #477dca;
+    border: 2px solid #477dca; */
 }
 
 .xeokit-btn.disabled:hover {
     opacity: .55;
-    color: #99A4AD;
-    border: 2px solid #6c757d !important;
+    /* color: #99A4AD;
+    border: 2px solid #6c757d !important; */
 }
 
 /*  Tabs    */
@@ -74,9 +94,10 @@
 .xeokit-tabs {
     line-height: 1.5;
     padding: 0;
-    /*padding-left: 10px;*/
     height: 100%;
-    overflow:hidden;
+    /* overflow:hidden; */
+    position: fixed;
+    width: 370px;
 }
 
 .xeokit-tabs::before, .xeokit-tabs::after {
@@ -115,14 +136,24 @@
 }
 
 .xeokit-tabs .xeokit-tab.active .xeokit-tab-btn {
-    background-color: #03103F;
+    background-color: #0c0c0c;
+    color: rgb(253, 218,37);
 }
 
 @media (min-width: 40em) {
     .xeokit-tabs .xeokit-tab.active .xeokit-tab-btn {
         background-color: transparent;
-        border-bottom: #CFCFCF solid 3px;
+        /* border-bottom: rgb(253, 218,37) solid 1px; */
         margin-bottom: -1px;
+        color: rgb(253, 218,37);
+        text-transform: uppercase;
+    }
+
+    .xeokit-tabs .xeokit-tab.active .tab-bottom-line {
+        height: 2px;
+        background-color: rgb(253, 218,37);
+        width: 20px;
+        margin: auto;
     }
 }
 
@@ -134,18 +165,16 @@
     font-size: 16px;
     background-color: transparent;
     border-top: 2px solid #dcdcdc;
-    color: #CFCFCF;
+    color: #ffffff;
     display: block;
     font-weight: bold;
-    padding: 0.75em 5px;
-    padding-left: 0;
-    padding-right: 10px;
+    padding: 0.25em 10px;
     text-decoration: none;
 }
 
 @media (min-width: 40em) {
     .xeokit-tabs .xeokit-tab-btn {
-        font-size: 20px;
+        font-size: 15px;
         font-weight: normal;
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
@@ -155,7 +184,7 @@
 }
 
 .xeokit-tabs .xeokit-tab-btn:hover {
-    color: #477dca;
+    color: rgb(253, 218,37);
 }
 
 .xeokit-tabs .xeokit-tab-btn:focus {
@@ -163,9 +192,9 @@
 }
 
 .xeokit-tabs .xeokit-tab-content {
-    background: #03103F;
+    background: #0c0c0c;
     display: none;
-    padding-top: 2em;
+    padding-top: 3em;
     padding-left: 0;
     padding-right: 0px;
     width: calc(100% - 0px);
@@ -182,47 +211,83 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     margin-bottom: 10px;
+    margin-left: 20px;
 }
 
 .xeokit-tabs .xeokit-btn {
-    font-size: 16px;
-    font-weight: normal;
+    font-size: 18px;
+    font-weight: 600;
     position: relative;
     flex: 1 1 auto;
-    color: #CFCFCF;
-    background-color: transparent;
+    background-color: rgb(253, 218,37);
     text-align: center;
     vertical-align: middle;
-    border: 2px solid #CFCFCF;
-    padding: .75rem .75rem;
-    margin: 0 5px 10px 0;
-    border-radius: .35rem;
+    border: none;
+    padding: 0.25rem 0.35rem;
+    margin: 0 5px 0px 0px;
+    border-radius: .25rem;
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     -webkit-appearance: button;
     overflow: visible;
     box-sizing: border-box;
     align-items: flex-start;
-    /*font: 400 13.3333px Arial;*/
+    width: 130px;
+    height: 30px;
+    outline: none;
+}
+
+.xeokit-unloadAllModels.xeokit-btn {
+    
+}
+
+.xeokit-hideAllObjects.xeokit-btn,
+.xeokit-hideAllClasses.xeokit-btn,
+.xeokit-hideAllStoreys.xeokit-btn {
+    margin-left: 45px;
+}
+
+.btn-img-div {
+    display: flex;
+}
+
+.xeokit-showAllObjects .btn-img-div img,
+.xeokit-showAllClasses .btn-img-div img,
+.xeokit-showAllStoreys .btn-img-div img,
+.xeokit-hideAllObjects .btn-img-div img,
+.xeokit-hideAllClasses .btn-img-div img,
+.xeokit-hideAllStoreys .btn-img-div img {
+    width: 24px;
+}
+
+.btn-img-div span {
+    transform: translate(14px, 0px);
 }
 
 .xeokit-tabs .xeokit-btn:hover {
-    color: #477dca;
-    border: 2px solid #477dca;
+    /* color: #477dca; */
+    /* border: 2px solid white; */
     /*background: black;*/
 }
 
 .xeokit-tabs .xeokit-tab-btn.disabled {
-    opacity: .55;
-    color: #99A4AD;
+    /* opacity: .55; */
+    /* color: #99A4AD; */
 }
 
 .xeokit-modelsTab {
 
 }
 
+.tab-issue-img {
+    position: fixed;
+    width: 25px;
+    transform: translateX(10px);
+}
+
 .xeokit-modelsTab .xeokit-form-check {
     padding: 2px 0 2px 15px;
     line-height: 3ex;
+    margin: 32px;
 }
 
 .xeokit-modelsTab .xeokit-form-check input {
@@ -232,15 +297,15 @@
 .xeokit-modelsTab .xeokit-form-check span {
     display: inline-block;
     color: #ffff;
-    background-color: #03103F;
+    /* background-color: #03103F; */
     padding-left: 3px;
     width: calc(100% - 30px);
     vertical-align: middle;
 }
 
 .xeokit-modelsTab .xeokit-form-check span.disabled {
-    color: #99A4AD;
-    background-color: #03103F;
+    color: #f9f9f9;
+    /* background-color: #03103F; */
 }
 
 .xeokit-modelsTab .xeokit-form-check span:hover {
@@ -252,20 +317,22 @@
 
 .xeokit-modelsTab .xeokit-form-check span.disabled:hover {
     color: #99A4AD;
-    background-color: #03103F;
+    /* background-color: #03103F; */
     cursor: default;
 }
 
 .xeokit-objectsTab ul {
     list-style: none;
     padding-left: 1.75em;
+    margin-top: 0px;
 }
 
 .xeokit-objectsTab ul li {
     margin: 2px 0;
     position: relative;
-    width: 500px;
+    width: 370px;
     line-height: 3ex;
+    padding: 5px;
 }
 
 .xeokit-objectsTab ul li a {
@@ -283,15 +350,21 @@
 }
 
 .xeokit-objectsTab ul li a.plus {
-    background-color: #ded;
+    /* background-color: #ded; */
+    background-color: transparent;
+    border: 2px solid rgb(253, 218,37);
+    color: rgb(253, 218,37);
 }
 
 .xeokit-objectsTab ul li a.minus {
-    background-color: #eee;
+    /* background-color: #eee; */
+    background-color: transparent;
+    border: 2px solid rgb(253, 218,37);
+    color: rgb(253, 218,37);
 }
 
 .xeokit-objectsTab ul li a:active {
-    top: 1px;
+    top: 4px;
 }
 
 .xeokit-objectsTab ul li input {
@@ -322,10 +395,14 @@
 
 .xeokit-objectsTab .highlighted-node { /* Appearance of node highlighted with BIMViewer#showObjectInExplorers() */
     border: black solid 1px;
-    background: yellow;
+    background: #A7A9AB;
     color: black;
     padding-left: 1px;
     padding-right: 5px;
+}
+
+.xeokit-objectsTab .highlighted-node a {
+    transform: translateX(-10px) !important;
 }
 
 .xeokit-storeysTab ul {
@@ -336,8 +413,9 @@
 .xeokit-storeysTab ul li {
     margin: 2px 0;
     position: relative;
-    width: 500px;
+    width: 370px;
     line-height: 3ex;
+    padding: 5px;
 }
 
 .xeokit-storeysTab ul li a {
@@ -355,15 +433,21 @@
 }
 
 .xeokit-storeysTab ul li a.plus {
-    background-color: #ded;
+    /* background-color: #ded; */
+    background-color: transparent;
+    border: 2px solid rgb(253, 218,37);
+    color: rgb(253, 218,37);
 }
 
 .xeokit-storeysTab ul li a.minus {
-    background-color: #eee;
+    /* background-color: #eee; */
+    background-color: transparent;
+    border: 2px solid rgb(253, 218,37);
+    color: rgb(253, 218,37);
 }
 
 .xeokit-storeysTab ul li a:active {
-    top: 1px;
+    top: 4px;
 }
 
 .xeokit-storeysTab ul li input {
@@ -393,10 +477,14 @@
 
 .xeokit-storeysTab .highlighted-node { /* Appearance of node highlighted with BIMViewer#showObjectInExplorers() */
     border: black solid 1px;
-    background: yellow;
+    background: #A7A9AB;
     color: black;
     padding-left: 1px;
     padding-right: 5px;
+}
+
+.xeokit-storeysTab .highlighted-node a {
+    transform: translateX(-10px) !important;
 }
 
 .xeokit-classesTab ul {
@@ -407,8 +495,9 @@
 .xeokit-classesTab ul li {
     margin: 2px 0;
     position: relative;
-    width: 500px;
+    width: 370px;
     line-height: 3ex;
+    padding: 5px;
 }
 
 .xeokit-classesTab ul li a {
@@ -426,15 +515,21 @@
 }
 
 .xeokit-classesTab ul li a.plus {
-    background-color: #ded;
+    /* background-color: #ded; */
+    background-color: transparent;
+    border: 2px solid rgb(253, 218,37);
+    color: rgb(253, 218,37);
 }
 
 .xeokit-classesTab ul li a.minus {
-    background-color: #eee;
+    /* background-color: #eee; */
+    background-color: transparent;
+    border: 2px solid rgb(253, 218,37);
+    color: rgb(253, 218,37);
 }
 
 .xeokit-classesTab ul li a:active {
-    top: 1px;
+    top: 4px;
 }
 
 .xeokit-classesTab ul li input {
@@ -465,55 +560,82 @@
 
 .xeokit-classesTab .highlighted-node { /* Appearance of node highlighted with BIMViewer#showObjectInExplorers() */
     border: black solid 1px;
-    background: yellow;
+    background: #A7A9AB;
     color: black;
     padding-left: 1px;
     padding-right: 5px;
 }
 
+.xeokit-classesTab .highlighted-node a {
+    transform: translateX(-10px) !important;
+}
+
 .xeokit-tree-panel {
     overflow-y: auto;
-    overflow-x: hidden;
-    height: calc(100% - 150px);
+    overflow-x: auto;
+    height: calc(100% - 170px);
+    margin-right: 32px;
+    margin-top: 30px;
+    margin-left: 30px;
 }
+
+.xeokit-tree-panel::-webkit-scrollbar {
+    transform: translateX(-6px);
+    box-shadow: inset 0 0 1px rgba(0,0,0,0.9);
+    height: 0;
+    width: 12px;
+}
+
+.xeokit-tree-panel::-webkit-scrollbar-track {
+    background-color: #67676a;
+    border-radius: 6px;
+}
+
+.xeokit-tree-panel::-webkit-scrollbar-thumb {
+    border-radius: 6px 6px 0 0;
+    background-color: rgb(253, 218,37);
+    box-shadow: inset 0 0 1px rgba(0,0,0,0.9);
+}
+
 
 /* Context menu */
 
 .xeokit-context-menu {
-    font-family: 'Roboto', sans-serif;
-    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
     display: none;
     z-index: 300000;
     background: rgba(255, 255, 255, 0.46);
-    border: 1px solid black;
     border-radius: 6px;
-    padding: 0;
-    width: 200px;
+    width: 170px;
+    border-radius: 2px !important;
 }
 
 .xeokit-context-menu ul {
     list-style: none;
     margin-left: 0;
     padding: 0;
+    margin-top: 0px;
 }
 
 .xeokit-context-menu ul li {
     list-style-type: none;
-    padding-left: 10px;
-    padding-right: 20px;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    color: black;
+    padding-left: 30px;
+    padding-right: 0px;
+    padding-top: 5px;
+    padding-bottom: 0px;
+    color: #969494;
     border-bottom: 1px solid gray;
     background: rgba(255, 255, 255, 0.46);
     cursor: pointer;
     width: calc(100% - 30px);
+    float: left;
 }
 
 .xeokit-context-menu ul li:hover {
-    background: black;
-    color: white;
-    font-weight: bold;
+    background: transparent;
+    color: #634a4a;
+    font-weight: 700;
 }
 
 .xeokit-context-menu ul li span {
@@ -522,16 +644,103 @@
 
 .xeokit-context-menu .disabled {
     display: inline-block;
-    color: gray;
+    color: #cccccc;
     cursor: default;
     font-weight: normal;
 }
 
 .xeokit-context-menu .disabled:hover {
-    color: gray;
+    color: #cccccc;
     cursor: default;
-    background: #eeeeee;
+    background: transparent;
     font-weight: normal;
+}
+
+.xeokit-context-menu {
+    /* z-index: 300000 !important;
+    position: absolute !important;
+    border-radius: 4px !important;
+    display: block !important;
+    background: white !important; */
+
+    border: 1px solid rgba(128, 128, 128, 0.3) !important;
+    box-shadow: #ffffff 0px 1px 1px 0px !important
+}
+
+#xeokit-context-menu-1-1, 
+#xeokit-context-menu-1-2, 
+#xeokit-context-menu-1-4, 
+#xeokit-context-menu-1-5,
+#xeokit-context-menu-2-2,
+#xeokit-context-menu-2-6,
+#xeokit-context-menu-2-10,
+#xeokit-context-menu-4-0,
+#xeokit-context-menu-4-2,
+#xeokit-context-menu-4-5,
+#xeokit-context-menu-4-8,
+#xeokit-context-menu-4-13,
+#xeokit-context-menu-5-0,
+#xeokit-context-menu-5-2,
+#xeokit-context-menu-5-5,
+#xeokit-context-menu-5-8,
+#xeokit-context-menu-5-13,
+#xeokit-context-menu-6-0,
+#xeokit-context-menu-6-2,
+#xeokit-context-menu-6-5,
+#xeokit-context-menu-6-8,
+#xeokit-context-menu-6-13 {
+    border-bottom: 1px solid rgba(128, 128, 128, 0.3) !important;
+    padding-bottom: 5px !important;
+}
+
+#xeokit-context-menu-1-6,
+#xeokit-context-menu-2-13,
+#xeokit-context-menu-2-6,
+#xeokit-context-menu-2-10,
+#xeokit-context-menu-4-16 {
+    padding-bottom: 10px !important;
+}
+
+#xeokit-context-menu-2-0,
+#xeokit-context-menu-2-3,
+#xeokit-context-menu-2-7,
+#xeokit-context-menu-2-11 {
+    padding-top: 10px !important;
+}
+
+
+#xeokit-context-menu-2-1,
+#xeokit-context-menu-2-2,
+#xeokit-context-menu-2-4,
+#xeokit-context-menu-2-5,
+#xeokit-context-menu-2-6,
+#xeokit-context-menu-2-8,
+#xeokit-context-menu-2-9,
+#xeokit-context-menu-2-10,
+#xeokit-context-menu-2-12,
+#xeokit-context-menu-2-13 {
+    padding-top: 0px !important;
+}
+
+
+.annotation-marker {
+    font-family: 'Montserrat', sans-serif !important;
+    color: black !important;
+    background-color: white !important;
+    border: 2px solid red !important;
+    box-shadow: none !important;
+}
+
+#xeokit_close_btn {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    cursor: pointer;
+    z-index: 200000;
+}
+
+.xeokit-close-btn {
+    width: 30px;
 }
 
 /* Busy modal dialog */
@@ -559,7 +768,7 @@
     padding: 0;
     border: 2px solid #888;
     border-radius: 0.5em;
-    width: 400px;
+    width: 370px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     -webkit-animation-name: xeokit-busy-modal-animatetop;
     -webkit-animation-duration: 0.6s;
@@ -596,4 +805,80 @@
 .xeokit-busy-modal-body {
     padding: 2px 14px;
     margin: 20px 2px
+}
+
+.annotation-label {
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: none !important;
+    border: 1px solid #dcdbdb !important;
+    border-radius: 1px !important;
+    padding: 0px !important;
+}
+
+.annotation-label-top {
+    border-bottom: 1px solid #e2e2e2;
+    display: inline-flex;
+    width: 100%;
+}
+
+.annotation-label-bottom {
+    padding: 10px;
+}
+
+.annotation-label img {
+    width: 20px;
+    margin: 9px;
+}
+
+.annotation-title {
+    font: normal 14px 'Montserrat', sans-serif !important;
+    margin-bottom: 4px;
+    border: none;
+    font-weight: 600 !important;
+    margin-left: 4px;
+    margin-bottom: 0px !important;
+    resize: none;
+    margin-top: 10px;
+}
+
+.annotation-desc {
+    width: 97%;
+    border: none;
+    min-height: 4em;
+    max-height: 50vh;
+    resize: none;
+    font: normal 16px 'Montserrat', sans-serif;
+    color: #8c8c8c;
+}
+
+.annotation-title:focus, .annotation-desc:focus {
+    outline: none;
+}
+
+.annotation-label:before {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 9px 13px 9px 0;
+    border-color: transparent #ffffff;
+    display: none !important;
+    width: 0;
+    z-index: -1 !important;
+    margin-top: -12px;
+    left: -15px;
+    top: 20px;
+}
+
+.annotation-label:after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 8px 12px 8px 0;
+    border-color: transparent white;
+    display: none !important;
+    width: 0;
+    z-index: -1 !important;
+    margin-top: -11px;
+    left: -12px;
+    top: 20px;
 }

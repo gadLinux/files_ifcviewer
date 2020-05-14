@@ -14,8 +14,7 @@ namespace OCA\Files_Ifcviewer\AppInfo;
 
 use OCP\Util;
 
-Util::addScript('files_ifcviewer', 'annotation-binding-script');
 Util::addScript('files_ifcviewer', 'previewifc');
-
+Util::addScript('files_ifcviewer', 'annotation-binding-script');
 
 

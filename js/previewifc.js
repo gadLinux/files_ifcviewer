@@ -45,86 +45,19 @@
 			var self = this;
 			var shown = true;
 			var $iframe;
-			var viewer = OC.generateUrl('/apps/files_ifcviewer/?file={file}&projectId={projectId}&modelId={modelId}&dataDir={dataDir}', 
+			var viewer = OC.generateUrl('/apps/files_ifcviewer/?fileId={fileId}&file={file}&projectId={projectId}&modelId={modelId}&dataDir={dataDir}', 
 					{
+						fileId: fileContext.fileId,
 						file: fileContext.downloadUrl,
 						projectId: fileContext.id,
 						modelId: fileContext.id,
 						dataDir: fileContext.hostUrl
 					});
-			$iframe = $('<iframe id="ifcframe" style="width:100%;height:100%;display:block;position:absolute;top:0;z-index:1041;margin-top:50px" src="'+viewer+'" sandbox="allow-scripts allow-same-origin allow-popups allow-modals allow-top-navigation" allowfullscreen="true"/>');
-
 			if(isFileList === true) {
 				FileList.setViewerMode(true);
 			}
+                        window.location.replace(viewer);
 
-			if ($('#isPublic').val()) {
-				// force the preview to adjust its height
-				$('#preview').append($iframe).css({height: '100%'});
-				$('body').css({height: '100%'});
-				$('#content').addClass('full-height');
-				$('footer').addClass('hidden');
-				$('#imgframe').addClass('hidden');
-				$('.directLink').addClass('hidden');
-				$('.directDownload').addClass('hidden');
-				$('#controls').addClass('hidden');
-			} else {
-				$('#app-content').after($iframe);
-			}
-			
-
-			$("#pageWidthOption").attr("selected","selected");
-			// replace the controls with our own
-			$('#app-content #controls').addClass('hidden');
-
-			// if a filelist is present, the PDF viewer can be closed to go back there
-			$('#ifcframe').load(function(){
-				var iframe = $('#ifcframe').contents();
-				if ($('#fileList').length)
-				{
-//					iframe.find('#secondaryToolbarClose').click(function() {
-//						self.hide();
-//					});
-
-					// Go back on ESC
-					$(document).keyup(function(e) {
-						if (shown && e.keyCode == 27) {
-							shown = false;
-							self.hide();
-						}
-					});
-				} else {
-					console.log("IFCViewer: No file list contents");
-//					iframe.find("#secondaryToolbarClose").addClass('hidden');
-				}
-				/*
-				if($('#bimdata-viewer').length){
-					var viewer_contents = $('#bimdata-viewer').contents();
-					if ($('#fileList').length) {
-						OCA.FilesIFCViewer.BimData.init(fileContext);
-						// Go back on ESC
-						$(document).keyup(function(e) {
-							if (shown && e.keyCode == 27) {
-								shown = false;
-								self.hide();
-							}
-						});
-					} else {
-						iframe.find("#secondaryToolbarClose").addClass('hidden');
-					}
-				};
-				*/
-			});
-			
-			if(!$('html').hasClass('ie8')) {
-				history.pushState({}, '', '#bimdata-viewer');
-			}
-
-			if(!$('html').hasClass('ie8')) {
-				$(window).one('popstate', function (e) {
-					self.hide();
-				});
-			}
 		},
 
 		/**
@@ -137,7 +70,6 @@
 			var registerMimeTypes = ['application/x-step', 'model/gltf-binary'];
 			var self = this;
 			var index = 1;
-//			const hostUrl = context.fileList.filesClient.getClient().resolveUrl(context.dir);
 			
 			for (const mimeType of registerMimeTypes) {
 				fileActions.registerAction({
@@ -150,12 +82,14 @@
 						const downloadUrl = context.fileList.getDownloadUrl(fileName, context.dir);
 						if (downloadUrl && downloadUrl !== '#') {
 							var model=context.fileList.getModelForFile(fileName);
+							var fileInfo = context.fileList.findFile(fileName);
 							var fileContext = {
 								hostUrl: hostUrl + "index.php/apps/files_ifcviewer/api",
 								downloadUrl: downloadUrl,
 								cid: model.cid,
 								id: model.id,
 								attributes: model.attributes,
+								fileId: fileInfo.id,
 							};
 							self.show(fileContext, true);
 						}
