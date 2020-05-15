@@ -33,15 +33,14 @@ class DisplayController extends Controller {
 	public function showViewer() {
 	    $params = [];
 	    $response = new TemplateResponse($this->appName, 'viewer');
-            $policy = new ContentSecurityPolicy();
-            $policy->addAllowedFrameDomain('\'self\'');
-            $policy->addAllowedFontDomain('data:');
-            $policy->addAllowedImageDomain('*');
-	    $policy->allowEvalScript(false);
+        $policy = new ContentSecurityPolicy();
+        $policy->addAllowedFrameDomain('\'self\'');
+        $policy->addAllowedFontDomain('data:');
+        $policy->addAllowedImageDomain('*');
 	    $policy->addAllowedScriptDomain('\'self\'');
 	    $policy->addAllowedStyleDomain('\'self\'');
 	    $policy->addAllowedFrameAncestorDomain('\'self\'');
-            $response->setContentSecurityPolicy($policy);
+        $response->setContentSecurityPolicy($policy);
 		
             return $response;
 	}

@@ -36,6 +36,32 @@
 			// replace the controls with our own
 			$('#app-content #controls').removeClass('hidden');
 		},
+		bind_event: // addEventListener support for IE8
+			function bindEvent(element, eventName, eventHandler) {
+		    if (element.addEventListener){
+		        element.addEventListener(eventName, eventHandler, false);
+		    } else if (element.attachEvent) {
+		        element.attachEvent('on' + eventName, eventHandler);
+		    }
+		},
+		
+		bind_annotations: function(fileContext) {
+			var self = this;
+			// Listen to message from child window
+			self.bind_event(window, 'message', function (e) {
+				var msg = e.data;
+				var fileId = fileContext.fileId;
+				if(msg.op == 'get-annotation-list') {
+					getAnnotations(fileId);
+				} else if (msg.op == 'create-annotation') {
+			        createAnnotation(fileId, msg.data);
+				} else if (msg.op == 'update-annotation') {
+			        updateAnnotation(fileId, msg.data);
+				} else if (msg.op == 'delete-annotation') {
+			        deleteAnnotation(fileId, msg.data);
+				}
+			});
+		},
 
 		/**
 		 * @param fileContext
@@ -45,7 +71,7 @@
 			var self = this;
 			var shown = true;
 			var $iframe;
-			var viewer = OC.generateUrl('/apps/files_ifcviewer/?fileId={fileId}&file={file}&projectId={projectId}&modelId={modelId}&dataDir={dataDir}', 
+			var viewer = OC.generateUrl('/apps/files_ifcviewer/iframe?fileId={fileId}&file={file}&projectId={projectId}&modelId={modelId}&dataDir={dataDir}', 
 					{
 						fileId: fileContext.fileId,
 						file: fileContext.downloadUrl,
@@ -53,11 +79,59 @@
 						modelId: fileContext.id,
 						dataDir: fileContext.hostUrl
 					});
+			$iframe = $('<iframe id="ifcframe" style="width:100%;height:100%;display:block;position:absolute;top:0;z-index:1041;margin-top:50px" src="'+viewer+'" sandbox="allow-scripts allow-same-origin allow-popups allow-modals allow-top-navigation" allowfullscreen="true"/>');
+
 			if(isFileList === true) {
 				FileList.setViewerMode(true);
 			}
-                        window.location.replace(viewer);
 
+			if ($('#isPublic').val()) {
+				// force the preview to adjust its height
+				$('#preview').append($iframe).css({height: '100%'});
+				$('body').css({height: '100%'});
+				$('#content').addClass('full-height');
+				$('footer').addClass('hidden');
+				$('#imgframe').addClass('hidden');
+				$('.directLink').addClass('hidden');
+				$('.directDownload').addClass('hidden');
+				$('#controls').addClass('hidden');
+			} else {
+				$('#app-content').after($iframe);
+			}
+			
+
+			$("#pageWidthOption").attr("selected","selected");
+			// replace the controls with our own
+			$('#app-content #controls').addClass('hidden');
+
+			// if a filelist is present, the PDF viewer can be closed to go back there
+			$('#ifcframe').load(function(){
+				self.bind_annotations(fileContext);
+				var iframe = $('#ifcframe').contents();
+				if ($('#fileList').length)
+				{
+					// Go back on ESC
+					$(document).keyup(function(e) {
+						if (shown && e.keyCode == 27) {
+							shown = false;
+							self.hide();
+						}
+					});
+				} else {
+					console.log("IFCViewer: No file list contents");
+//					iframe.find("#secondaryToolbarClose").addClass('hidden');
+				}
+			});
+			
+			if(!$('html').hasClass('ie8')) {
+				history.pushState({}, '', '#bimdata-viewer');
+			}
+
+			if(!$('html').hasClass('ie8')) {
+				$(window).one('popstate', function (e) {
+					self.hide();
+				});
+			}
 		},
 
 		/**

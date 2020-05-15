@@ -1,19 +1,3 @@
-// addEventListener support for IE8
-function bindEvent(element, eventName, eventHandler) {
-    if (element.addEventListener){
-        element.addEventListener(eventName, eventHandler, false);
-    } else if (element.attachEvent) {
-        element.attachEvent('on' + eventName, eventHandler);
-    }
-}
-function getRequestParams() {
-        var vars = {};
-        window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m, key, value) => {
-            vars[key] = value;
-        });
-        return vars;
-}
-
 var baseUrl = OC.generateUrl('/apps/files_ifcviewer_annotation');
 //var iframeEl = document.getElementById('ifcframe');
 var sendMessage = function(msg) {
@@ -63,17 +47,4 @@ var getAnnotations = function (fileId) {
 	    // handle failure
 	});
 };
-// Listen to message from child window
-bindEvent(window, 'message', function (e) {
-	var msg = e.data;
-	var fileId = getRequestParams()["fileId"];
-	if(msg.op == 'get-annotation-list') {
-		getAnnotations(fileId);
-	} else if (msg.op == 'create-annotation') {
-        createAnnotation(fileId, msg.data);
-	} else if (msg.op == 'update-annotation') {
-        updateAnnotation(fileId, msg.data);
-	} else if (msg.op == 'delete-annotation') {
-        deleteAnnotation(fileId, msg.data);
-	}
-});
+
