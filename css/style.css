@@ -1,12 +1,15 @@
+/* prefixed by https://autoprefixer.github.io (PostCSS: v7.0.26, autoprefixer: v9.7.3) */
+
 /* Page style */
 
 html, body {
     height: 100%;
     background: #f2f2f2;
+    color: #000;
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 14px;
     line-height: 1.50;
     -webkit-font-smoothing: antialiased;
@@ -15,25 +18,80 @@ body {
 }
 
 #myViewer {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     width: 100%;
     height: 100%;
-    align-items: stretch;
+    -webkit-box-align: stretch;
+        -ms-flex-align: stretch;
+            align-items: stretch;
     z-index: 10000;
     overflow: hidden;
 }
 
 #myExplorer {
-    min-width: 400px;
-    max-width: 400px;
+    min-width: 370px;
+    max-width: 370px;
     height: 100%;
-    margin-left: -400px;
-    background: #03103F;
+    margin-left: -370px;
+    background: #0c0c0c;
     color: #fff;
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
     transition: all 0.3s;
     padding: 0;
-    padding-left: 15px;
+    padding-left: 5px;
     overflow-y: hidden;
+    transition: all 500ms linear;
+}
+
+#panel_control_btn {
+    width: 0px;
+    height: 0px;
+    z-index: 10001;
+    position: absolute;
+    left: 383px;
+    top: 45%;
+    cursor: pointer;
+    transform: translateX(-27px);
+    transition: all 500ms linear;
+}
+
+#panel_control_btn img {
+    width: 37px;
+}
+
+#right-arrow-img {
+    display: none;
+}
+
+#hide_panel_btn_mobile {
+    display: none;
+    width: 0px;
+    height: 0px;
+    z-index: 10001;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-top: 30px solid #fad116;
+    cursor: pointer;
+    transform: translate(300px, -60px);
+    pointer-events: all;
+}
+
+#myViewer.panel-hide #panel_control_btn {
+    width: 0px;
+    height: 0px;
+    z-index: 10001;
+    position: fixed;
+    left: 14px;
+    top: 45%;
+    cursor: pointer;
+}
+
+#myViewer.panel-hide #myExplorer {
+    /* min-width: 0px;
+    width: 0px; */
 }
 
 #myExplorer.active {
@@ -59,10 +117,11 @@ body {
     padding: 0;
     font-size: 14px;
     display: block;
+    transform: scale(0.9);
 }
 
 #myExplorer ul li a:hover {
-    color: #477dca;
+    font-weight: 600;
 }
 
 #myExplorer ul li.active > a, a[aria-expanded="true"] {
@@ -71,25 +130,103 @@ body {
 }
 
 #myExplorer input[type="checkbox"] {
-    background-color: initial;
     cursor: default;
     -webkit-appearance: checkbox;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     margin: 3px 4px 3px 8px;
     padding: initial;
-    border: initial;
+    border: 2px solid white;
+    border-radius: 50%;
+    vertical-align: middle;
+    outline: none;
+    width: 1.1em;
+    height: 1.1em;
+    -webkit-appearance: none;
 }
 
+#myExplorer input[type="checkbox"]:checked {
+    background-color: rgb(253, 218,37);
+    border: 2px solid white;
+}
+
+/******************** For checkbox style  **********************/
+#myExplorer label {
+    position: relative;
+    display: inline-block;
+    
+    /*16px width of fake checkbox + 6px distance between fake checkbox and text*/
+    padding-left: 22px;
+}
+
+#myExplorer label::before,
+#myExplorer label::after {
+    position: absolute;
+    content: "";
+    
+    /*Needed for the line-height to take effect*/
+    display: inline-block;
+}
+
+/*Outer box of the fake checkbox*/
+#myExplorer label::before{
+    height: 16px;
+    width: 16px;
+    
+    border: 1px solid;
+    left: 0px;
+    
+    /*(24px line-height - 16px height of fake checkbox) / 2 - 1px for the border
+     *to vertically center it.
+     */
+    top: 3px;
+}
+
+/*Checkmark of the fake checkbox*/
+#myExplorer label::after {
+    height: 5px;
+    width: 9px;
+    border-left: 2px solid;
+    border-bottom: 2px solid;
+    
+    transform: rotate(-45deg);
+    
+    left: 4px;
+    top: 7px;
+}
+
+/*Hide the checkmark by default*/
+#myExplorer input[type="checkbox"] + label::after {
+    content: none;
+}
+
+/*Unhide on the checked state*/
+#myExplorer input[type="checkbox"]:checked + label::after {
+    content: "";
+}
+
+/*Adding focus styles on the outer-box of the fake checkbox*/
+#myExplorer input[type="checkbox"]:focus + label::before {
+    outline: rgb(59, 153, 252) auto 5px;
+}
+/******************** End  **********************/
+
+
+
 #myContent {
-    width: calc(100% - 400px);
+    width: 100%;
     height: 100%;
     background: #f2f2f2;
 }
 
 #myToolbar {
     top: 0;
-    align-items: center;
-    justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     padding: 0;
     /*height: 60px;*/
     z-index: 100000;
@@ -109,9 +246,77 @@ body {
 
 #myNavCubeCanvas {
     position: absolute;
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     bottom: 0;
     right: 0;
     z-index: 200000;
+}
+
+@media (max-width: 767px) {
+
+    #myNavCubeCanvas {
+        bottom: -100px;
+    }
+
+    body {
+        width: 100vw;
+        overflow: auto;
+        display: block;
+        cursor: default;
+    }
+
+    #myViewer {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        height: auto;
+        overflow: auto;
+        width: 100vw;
+    }
+    #myExplorer {
+        overflow: auto;
+        min-height: 300px;
+        min-width: 100%;
+        max-width: 100%;
+        padding-right: 15px;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+        padding-bottom: 20px;
+        padding-top: 20px;
+        height: auto;
+    }
+
+    #myContent {
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+        overflow: hidden;
+    }
+
+    #myToolbar {
+        position: relative;
+    }
+
+    #myToolbar .xeokit-btn-group {
+        margin-right: 10px !important;
+        margin-bottom: 5px !important;
+    }
+
+    body canvas:last-child {
+        width: 100% !important;
+        height: 100vh !important;
+    }
+
+    #panel_control_btn {
+        display: none;
+    }
+
+    #hide_panel_btn_mobile {
+        display: block;
+    }
 }

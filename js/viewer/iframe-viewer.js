@@ -194,7 +194,76 @@ window.onload = function () {
         }
         return hashParams;
     }
+    var hide_flag = false;
+        document.getElementById("left-arrow-img").style.display = 'block';
+        document.getElementById("right-arrow-img").style.display = 'none';
+        document.getElementById('panel_control_btn').addEventListener('click', function() {
+            var element = document.getElementById("myViewer");
+            var element1 = document.getElementById("myExplorer");
+            if (hide_flag == false) {
+                element.classList.add("panel-hide");
+                element1.classList.remove("active");
+                setTimeout(function() {
+                    document.getElementById("left-arrow-img").style.display = 'none';
+                    document.getElementById("right-arrow-img").style.display = 'block';
+                }, 600);
+            } else {
+                element.classList.remove("panel-hide");
+                element1.classList.add("active");
+                setTimeout(function() {
+                    document.getElementById("left-arrow-img").style.display = 'block';
+                    document.getElementById("right-arrow-img").style.display = 'none';
+                }, 600);
+            }
+            hide_flag = !hide_flag;
+        });
 
+        document.getElementById('hide_panel_btn_mobile').addEventListener('click', function() {
+            var element = document.getElementById("myViewer");
+            var element1 = document.getElementById("myExplorer");
+            if (hide_flag == false) {
+                element.classList.add("panel-hide");
+                element1.classList.remove("active");
+            } else {
+                element.classList.remove("panel-hide");
+                element1.classList.add("active");
+            }
+            hide_flag = !hide_flag;
+        });
+
+        document.getElementById('xeokit_close_btn').addEventListener('click', function() {
+            location.reload();
+        });
+
+        var autoExpand = function (field) {
+            // Reset field height
+            field.style.height = 'inherit';
+
+            // Get the computed styles for the element
+            var computed = window.getComputedStyle(field);
+
+            // Calculate the height
+            var height = parseInt(computed.getPropertyValue('border-top-width'), 10)
+                        + parseInt(computed.getPropertyValue('padding-top'), 10)
+                        + field.scrollHeight
+                        + parseInt(computed.getPropertyValue('padding-bottom'), 10)
+                        + parseInt(computed.getPropertyValue('border-bottom-width'), 10);
+            field.style.height = height + 'px';
+        };
+
+        document.addEventListener('input', function (event) {
+            if (event.target.tagName.toLowerCase() !== 'textarea') return;
+            autoExpand(event.target);
+        }, false);
+
+        var tab_buttons = document.getElementsByClassName('xeokit-tab-btn');
+        for (var i=0; i<tab_buttons.length; i++) {
+            tab_buttons[i].addEventListener('click', function() {
+                document.getElementsByClassName('xeokit-objects xeokit-tree-panel')[0].scrollLeft = 0;
+                document.getElementsByClassName('xeokit-classes xeokit-tree-panel')[0].scrollLeft = 0;
+                document.getElementsByClassName('xeokit-storeys xeokit-tree-panel')[0].scrollLeft = 0;
+            });
+        }
     window.bimViewer = bimViewer; // For debugging
 
 };
