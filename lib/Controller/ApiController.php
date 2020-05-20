@@ -60,6 +60,35 @@ class ApiController extends Controller
     
     /**
      *
+     * @param string $fileId
+     * @param string $filePath
+     * @return void|string
+     */
+    public function execConversionScript(string $fileId, string $filePath)
+    {
+        $path = getcwd(); 
+        $command = $path.'/apps/files_ifcviewer/scripts/convert-script.sh';
+        $commandParameters = ' ' .
+            escapeshellarg($fileId) .
+            ' ' .
+            escapeshellarg($filePath);
+            $exec = $command . $commandParameters;
+            $exitCode = 0;
+            exec($exec, $out, $exitCode);
+            if ($exitCode !== 0) {
+                $this->logger->error("could not convert {file}, reason: {out}", [
+                    'app' => 'workflow_ifc_converter',
+                    'file' => $fileNode->getPath(),
+                    'out' => $out
+                ]);
+                return;
+            }
+            return "1";
+    }
+    
+    
+    /**
+     *
      * @PublicPage
      * @NoCSRFRequired
      *
@@ -98,39 +127,10 @@ class ApiController extends Controller
         $subdir = implode('/', array_slice(explode('/', $mountPoint[1], 10), 1));
         $fileSystemBaseFileName = $mountPoint[0]->getLocalFile($mountPoint[1] . '/' . $ext['basename']);
         
-        // $fileSize = $view->filesize($fileNode->getName());
-        // $fileSystemPath = $view->getAbsolutePath($fileNode->getName());
-        
-        // $mountPoint[0]->
-        // //
-        // $filePath = $fileNode->getInternalPath();
-        // $fileNameWithoutExtension = substr($fileName, 0, strlen($filename) - (1+strlen($fileNode->getExtension())));
-        // $pathSegments = explode('/', $filePath, 4);
-        
-        // \OC\Files\Filesystem::init($mountPoint . '/files/' .$fileNameWithoutExtension . '-files');
-        
-        // $basename = '/' . $pathSegments[1] . '/' .$fileNameWithoutExtension . '-files';
-        // $tmpPath = $view->toTmpFile($basename);
-        
-        // $defaultParameters = ' -env:UserInstallation=file://' . escapeshellarg($tmpDir . '/nextcloud-' . $this->config->getSystemValue('instanceid') . '/') . ' --headless --nologo --nofirststartwizard --invisible --norestore --convert-to pdf --outdir ';
-        // $clParameters = $this->config->getSystemValue('preview_office_cl_parameters', $defaultParameters);
-        
         $expectedExp = pathinfo($fileSystemBaseFileName);
         $expectedFileName = $expectedExp['filename']."-v".$hash;
         $expectedFilePath = $expectedExp['dirname'].'/'.$expectedFileName.".xkt";
-        if ($mimeType == 'application/x-step') {
-            if(!file_exists($expectedFilePath)){
-                $daeFileName = $this->convertIfc($fileSystemBaseFileName, $versionedFileName);
-                $gltfFileName = $this->convertCollada($daeFileName, $versionedFileName);
-                $xktFileName = $this->convertGltf($gltfFileName, $versionedFileName);
-            }else{
-                $xktFileName = $expectedFilePath;
-            }
-        }
-        
-        if ($mimeType == 'model/gltf-binary') {
-            $xktFileName = $this->convertGltf($fileSystemBaseFileName, $versionedFileName);
-        }
+        $this->execConversionScript($ifcid,$fileSystemBaseFileName);
         
         $xeokitId=$subdir . "/" . $expectedFileName;
         $responseModel = [
@@ -157,8 +157,9 @@ class ApiController extends Controller
                 ]
             ]
         ];
+            
         
-        if (file_exists($xktFileName)) {
+        if (file_exists($expectedFilePath)) {
             
             $directory = $fileNode->getParent();
             // $directoryList = $directory->getDirectoryListing();
