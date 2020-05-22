@@ -1,27 +1,81 @@
-# files_ifcviewer
-Place this app in **nextcloud/apps/**
+# Nextcloud app files_ifcviewer
+
+This is a viewer based on the fantastic BIMData viewer. We adapt it to fit to 
+Nextcloud and provide the information it requires to work via API.
+
+## Current status
+
+BETA: We are still doing changes. But mainly works. 
+We use for IFC model viewing. 
 
 ## Installation
 
+Place this app in **nextcloud/apps/**
+
 This app might require an additional manual step to work. 3D files may lack a proper mimetype and thus not recognized by this app. To fix the mimetypes, setup [mimetype mapping](https://docs.nextcloud.com/server/stable/admin_manual/configuration_mimetypes/index.html#mimetype-mapping) for your instance and add these lines to the array in `config/mimetypemapping.json`:
+
 ```bash
+"ifc": ["application/x-step"],
 "dae": ["model/vnd.collada+xml"],
-"fbx": ["model/fbx-dummy"],
 "gltf": ["model/gltf-binary", "model/gltf+json"],
-"obj": ["model/obj-dummy"]
+"xkt": ["model/xkt-binary"]
 ```
 
 **Please note**: If you do not already have a `confog/mimetypemapping.json`, make sure to wrap these lines in an JSON Object (`{}`).
 ```bash
 {
-    "dae": ["model/vnd.collada+xml"],
-    "fbx": ["model/fbx-dummy"],
-    "gltf": ["model/gltf-binary", "model/gltf+json"],
-    "obj": ["model/obj-dummy"]
+"ifc": ["application/x-step"],
+"dae": ["model/vnd.collada+xml"],
+"gltf": ["model/gltf-binary", "model/gltf+json"],
+"xkt": ["model/xkt-binary"]
 }
 ```
 
-Run the mimetype update `occ` command and (re-)upload your 3d files.
+Run the mimetype update:
+```bash
+sudo -u www-data ./occ maintenance:mimetype:update-js
+sudo -u www-data ./occ maintenance:mimetype:update-db
+```
+
+command and (re-)upload your 3d files.
+
+## Install converters
+
+The application looks for converters at /usr/local/bin
+
+Currently this is a three step process, as described here [https://xeokit.github.io/xeokit-sdk/examples/models/gltf/schependomlaan/]
+
+### Install IFC converter
+We use to convert from gltf to xkt internal model. 
+
+Install Ifc converter from: [http://ifcopenshell.org/ifcconvert]
+
+Basically get the zip and decompress.
+
+### Install COLLADA converter
+
+Install COLLADA converter from khronos group: [https://github.com/KhronosGroup/COLLADA2GLTF]
+
+In this case you can go to releases and grab latest one.
+
+### Install XKT converter
+Install from: [https://github.com/xeokit/xeokit-gltf-to-xkt]
+
+But basically you can run:
+```bash
+npm i @xeokit/xeokit-gltf-to-xkt -g
+```
+It will install the tool globally just at the correct place.
+
+
+At the end you will have something like this:
+```
+-rwxr-xr-x 1 root root 14378464 Mar 26 23:45 COLLADA2GLTF-bin
+-rwxr-xr-x 1 root root 36519216 Mar 26 23:46 IfcConvert
+-rwxr-xr-x 1 root root  1969526 Mar 24 11:27 composer
+lrwxrwxrwx 1 root root       58 Mar 26 23:42 gltf2xkt -> ../lib/node_modules/@xeokit/xeokit-gltf-to-xkt/gltf2xkt.js
+```
+
 
 ## Building the app
 

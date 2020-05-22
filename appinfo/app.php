@@ -14,10 +14,7 @@ namespace OCA\Files_Ifcviewer\AppInfo;
 
 use OCP\Util;
 
-Util::addStyle('files_ifcviewer', 'style');
-
-Util::addScript('files_ifcviewer', 'vendor/bimdata/bimdata-viewer.min');
 Util::addScript('files_ifcviewer', 'previewifc');
-
+Util::addScript('files_ifcviewer', 'annotation-binding-script');
 
 

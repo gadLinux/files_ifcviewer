@@ -9,7 +9,7 @@ use OCP\IURLGenerator;
 use OCP\IRequest;
 
 class DisplayController extends Controller {
-    private $userId;
+	private $userId;
 
 	/** @var IURLGenerator */
 	private $urlGenerator;
@@ -22,6 +22,28 @@ class DisplayController extends Controller {
 		$this->userId = $UserId;
 		$this->urlGenerator = $urlGenerator;
 	}
+        /**
+         *
+         * @PublicPage
+         * @NoCSRFRequired
+         * 
+         * @return TemplateResponse      
+         */
+
+	public function showViewer() {
+	    $params = [];
+	    $response = new TemplateResponse($this->appName, 'viewer');
+        $policy = new ContentSecurityPolicy();
+        $policy->addAllowedFrameDomain('\'self\'');
+        $policy->addAllowedFontDomain('data:');
+        $policy->addAllowedImageDomain('*');
+	    $policy->addAllowedScriptDomain('\'self\'');
+	    $policy->addAllowedStyleDomain('\'self\'');
+	    $policy->addAllowedFrameAncestorDomain('\'self\'');
+        $response->setContentSecurityPolicy($policy);
+		
+            return $response;
+	}
 
 	/**
 	 *
@@ -31,20 +53,23 @@ class DisplayController extends Controller {
 	 * @param bool $minmode
 	 * @return TemplateResponse	 
 	 */
-	public function showIFCViewer() {
+	public function showIFrame() {
 	    $params = [
 	        'urlGenerator' => $this->urlGenerator,
-	        'minmode' => $minmode
+	        'minmode' => false
 	    ];
-	    $response = new TemplateResponse($this->appName, 'viewer', $params, 'blank');
+	    $response = new TemplateResponse($this->appName, 'iframe', $params,'blank');
 	    
 	    $policy = new ContentSecurityPolicy();
 	    $policy->addAllowedFrameDomain('\'self\'');
 	    $policy->addAllowedFontDomain('data:');
 	    $policy->addAllowedImageDomain('*');
-//	    $policy->allowEvalScript(false);
+	    $policy->allowEvalScript(false);
+	    $policy->addAllowedScriptDomain('\'self\'');
+	    $policy->addAllowedStyleDomain('\'self\'');
+	    $policy->addAllowedFrameAncestorDomain('\'self\'');
 	    $response->setContentSecurityPolicy($policy);
-	    
+	     
 	    return $response;
 	}
 

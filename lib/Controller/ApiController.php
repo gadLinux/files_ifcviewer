@@ -46,7 +46,148 @@ class ApiController extends Controller
      */
     public function serve()
     {
-        return new DataResponse("{}");
+        
+        $responseModel = [
+            "projects" => [[
+                "id" => "123",
+                "name" => "123",
+            ]],
+        ];
+        $response = new JSONResponse($responseModel);
+        // $response->cacheFor(3600);
+        return $response;
+    }
+    
+    /**
+     *
+     * @param string $fileId
+     * @param string $filePath
+     * @return void|string
+     */
+    public function execConversionScript(string $fileId, string $filePath)
+    {
+        $path = getcwd(); 
+        $command = $path.'/apps/files_ifcviewer/scripts/convert-script.sh';
+        $commandParameters = ' ' .
+            escapeshellarg($fileId) .
+            ' ' .
+            escapeshellarg($filePath);
+            $exec = $command . $commandParameters;
+            $exitCode = 0;
+            exec($exec, $out, $exitCode);
+            if ($exitCode !== 0) {
+                $this->logger->error("could not convert {file}, reason: {out}", [
+                    'app' => 'workflow_ifc_converter',
+                    'file' => $fileNode->getPath(),
+                    'out' => $out
+                ]);
+                return;
+            }
+            return "1";
+    }
+    
+    
+    /**
+     *
+     * @PublicPage
+     * @NoCSRFRequired
+     *
+     * @param bool $minmode
+     * @return TemplateResponse
+     */
+    public function serveProjectInfo(string $projectid)
+    {
+        $ifcid=$projectid;
+        try {
+            $file = $this->userFolder->getById($ifcid);
+            if (count($file) < 1 || $file[0] instanceof Folder) {
+                throw new NotFoundException();
+            }
+        } catch (NotFoundException $e) {
+            return new DataResponse([
+                'message' => 'File not found.'
+            ], Http::STATUS_NOT_FOUND);
+        } catch (\Exception $e) {
+                return new DataResponse([], Http::STATUS_BAD_REQUEST);
+        }
+        // Based on https://github.com/nextcloud/workflow_pdf_converter/blob/master/lib/BackgroundJobs/Convert.php
+        /** @var OC\Files\Node\File $fileNode */
+        $fileNode = $file[0];
+        $mimeType = $fileNode->getMimetype();
+        $fileName = $fileNode->getName();
+        $checksum = $fileNode->getChecksum();
+        $hash = $fileNode->hash("md5");
+        
+        $ext = pathinfo($fileNode->getPath());
+        $versionedFileName = $ext['filename']."-v".$hash;
+        
+        $newBaseFilePath = $ext['dirname'].'/'.$ext['filename'];
+        $view = new \OC\Files\View($ext['dirname']);
+        $mountPoint = $view->resolvePath("/");
+        $subdir = implode('/', array_slice(explode('/', $mountPoint[1], 10), 1));
+        $fileSystemBaseFileName = $mountPoint[0]->getLocalFile($mountPoint[1] . '/' . $ext['basename']);
+        
+        $expectedExp = pathinfo($fileSystemBaseFileName);
+        $expectedFileName = $expectedExp['filename']."-v".$hash;
+        $expectedFilePath = $expectedExp['dirname'].'/'.$expectedFileName.".xkt";
+        $this->execConversionScript($ifcid,$fileSystemBaseFileName);
+        
+        $xeokitId=$subdir . "/" . $expectedFileName;
+        $responseModel = [
+            "id"=> $ifcid,
+            "name"=> "Duplex",
+            "models"=> [
+                [
+                    "id"=> $xeokitId,
+                    "name"=> $ext['basename']
+                ]
+            ],
+            "viewerConfigs"=> [
+                "cameraNear"=> "0.05",
+                "cameraFar"=> "3000.0",
+                "saoEnabled"=> "true",
+                "saoBias"=> "0.5",
+                "saoIntensity"=> "0.5",
+                "saoScale"=> "1200.0",
+                "saoKernelRadius"=> "100"
+            ],
+            "viewerContent"=> [
+                "modelsLoaded"=> [
+                    $xeokitId
+                ]
+            ]
+        ];
+            
+        
+        if (file_exists($expectedFilePath)) {
+            
+            $directory = $fileNode->getParent();
+            // $directoryList = $directory->getDirectoryListing();
+            // $storage = $directory->getStorage();
+            // $scanner->scanFile($newBaseFilePath.'.xkt');
+            
+            try {
+                $scanner = new Scanner($this->userId, null, \OC::$server->query(IEventDispatcher::class), \OC::$server->getLogger());
+                $scanner->scan($ext['dirname']);
+            } catch (\Exception $e) {
+                $this->logger->logException($e, [
+                    'app' => 'files'
+                ]);
+            }
+            
+            // $storage->
+            if ($directory->nodeExists($newBaseFilePath . '.xkt')) {
+                $xktfileInfo = $view->getFileInfo($newBaseFilePath . '.xkt');
+            }
+            
+            
+        } else {
+            $responseModel = [];
+        }
+        
+        $response = new JSONResponse($responseModel);
+        // $response->cacheFor(3600);
+        return $response;
     }
 
     /**
@@ -120,14 +261,14 @@ class ApiController extends Controller
         
         $expectedExp = pathinfo($fileSystemBaseFileName);
         $expectedFileName = $expectedExp['filename']."-v".$hash;
-        $expectedFilePath = $expectedExp['dirname'].'/'.$expectedFileName.".xkt";
+        $expectedFilePath = $expectedExp['dirname'].'/'.$expectedFileName;
         if ($mimeType == 'application/x-step') {
             if(!file_exists($expectedFilePath)){
                 $daeFileName = $this->convertIfc($fileSystemBaseFileName, $versionedFileName);
                 $gltfFileName = $this->convertCollada($daeFileName, $versionedFileName);
                 $xktFileName = $this->convertGltf($gltfFileName, $versionedFileName);
             }else{
-                $xktFileName = $expectedFilePath;
+                $xktFileName = $expectedFilePath.".xkt";
             }
         }
         
