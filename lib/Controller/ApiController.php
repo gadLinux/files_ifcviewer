@@ -27,13 +27,17 @@ class ApiController extends Controller
 
     /** @var Folder */
     private $userFolder;
+    
+    /** @var ILogger */
+    protected $logger;
 
-    public function __construct($AppName, IRequest $request, IURLGenerator $urlGenerator, Folder $userFolder, $UserId)
+    public function __construct($AppName, IRequest $request, IURLGenerator $urlGenerator, Folder $userFolder, $UserId, ILogger $logger)
     {
         parent::__construct($AppName, $request);
         $this->userId = $UserId;
         $this->urlGenerator = $urlGenerator;
         $this->userFolder = $userFolder;
+        $this->logger = $logger;
     }
 
     /**
@@ -62,7 +66,7 @@ class ApiController extends Controller
      *
      * @param string $fileId
      * @param string $filePath
-     * @return void|string
+     * @return boolean
      */
     public function execConversionScript(string $fileId, string $filePath)
     {
@@ -74,16 +78,28 @@ class ApiController extends Controller
             escapeshellarg($filePath);
             $exec = $command . $commandParameters;
             $exitCode = 0;
+            
+            $this->logger->debug("Calling command wit h params {command}, params: {params}", [
+                'command' => $command,
+                'params' => $commandParameters
+            ]);
+            
             exec($exec, $out, $exitCode);
             if ($exitCode !== 0) {
                 $this->logger->error("could not convert {file}, reason: {out}", [
                     'app' => 'workflow_ifc_converter',
-                    'file' => $fileNode->getPath(),
+                    'file' => $fileId,
                     'out' => $out
                 ]);
-                return;
+                return false;
+            }else{
+                $this->logger->debug("Conversion correct {command}, params -> {params}: {out}", [
+                    'command' => $command,
+                    'params' => $commandParameters,
+                    'out' => $out
+                ]);
             }
-            return "1";
+            return true;
     }
     
     
@@ -130,59 +146,74 @@ class ApiController extends Controller
         $expectedExp = pathinfo($fileSystemBaseFileName);
         $expectedFileName = $expectedExp['filename']."-v".$hash;
         $expectedFilePath = $expectedExp['dirname'].'/'.$expectedFileName.".xkt";
-        $this->execConversionScript($ifcid,$fileSystemBaseFileName);
-        
-        $xeokitId=$subdir . "/" . $expectedFileName;
-        $responseModel = [
-            "id"=> $ifcid,
-            "name"=> "Duplex",
-            "models"=> [
-                [
-                    "id"=> $xeokitId,
-                    "name"=> $ext['basename']
+        if(!$this->execConversionScript($ifcid,$fileSystemBaseFileName)){
+            $responseModel = [
+                "id"=> $ifcid,
+                "name"=> "Duplex",
+                "models"=> [
+                    [
+                    ]
+                ],
+                "viewerContent"=> [
+                    "modelsLoaded"=> [
+                    ]
                 ]
-            ],
-            "viewerConfigs"=> [
-                "cameraNear"=> "0.05",
-                "cameraFar"=> "3000.0",
-                "saoEnabled"=> "true",
-                "saoBias"=> "0.5",
-                "saoIntensity"=> "0.5",
-                "saoScale"=> "1200.0",
-                "saoKernelRadius"=> "100"
-            ],
-            "viewerContent"=> [
-                "modelsLoaded"=> [
-                    $xeokitId
+            ];
+                        
+        }else{
+            
+            $xeokitId=$subdir . "/" . $expectedFileName;
+            $responseModel = [
+                "id"=> $ifcid,
+                "name"=> "Duplex",
+                "models"=> [
+                    [
+                        "id"=> $xeokitId,
+                        "name"=> $ext['basename']
+                    ]
+                ],
+                "viewerConfigs"=> [
+                    "cameraNear"=> "0.05",
+                    "cameraFar"=> "3000.0",
+                    "saoEnabled"=> "true",
+                    "saoBias"=> "0.5",
+                    "saoIntensity"=> "0.5",
+                    "saoScale"=> "1200.0",
+                    "saoKernelRadius"=> "100"
+                ],
+                "viewerContent"=> [
+                    "modelsLoaded"=> [
+                        $xeokitId
+                    ]
                 ]
-            ]
-        ];
+            ];
+                
             
-        
-        if (file_exists($expectedFilePath)) {
-            
-            $directory = $fileNode->getParent();
-            // $directoryList = $directory->getDirectoryListing();
-            // $storage = $directory->getStorage();
-            // $scanner->scanFile($newBaseFilePath.'.xkt');
-            
-            try {
-                $scanner = new Scanner($this->userId, null, \OC::$server->query(IEventDispatcher::class), \OC::$server->getLogger());
-                $scanner->scan($ext['dirname']);
-            } catch (\Exception $e) {
-                $this->logger->logException($e, [
-                    'app' => 'files'
-                ]);
+            if (file_exists($expectedFilePath)) {
+                
+                $directory = $fileNode->getParent();
+                // $directoryList = $directory->getDirectoryListing();
+                // $storage = $directory->getStorage();
+                // $scanner->scanFile($newBaseFilePath.'.xkt');
+                
+                try {
+                    $scanner = new Scanner($this->userId, null, \OC::$server->query(IEventDispatcher::class), \OC::$server->getLogger());
+                    $scanner->scan($ext['dirname']);
+                } catch (\Exception $e) {
+                    $this->logger->logException($e, [
+                        'app' => 'files'
+                    ]);
+                }
+                
+                // $storage->
+                if ($directory->nodeExists($newBaseFilePath . '.xkt')) {
+                    $xktfileInfo = $view->getFileInfo($newBaseFilePath . '.xkt');
+                }
+                
+                
+            } else {
+                $responseModel = [];
             }
-            
-            // $storage->
-            if ($directory->nodeExists($newBaseFilePath . '.xkt')) {
-                $xktfileInfo = $view->getFileInfo($newBaseFilePath . '.xkt');
-            }
-            
-            
-        } else {
-            $responseModel = [];
         }
         
         $response = new JSONResponse($responseModel);
