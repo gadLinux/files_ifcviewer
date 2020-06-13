@@ -242,7 +242,8 @@
 
 .xeokit-hideAllObjects.xeokit-btn,
 .xeokit-hideAllClasses.xeokit-btn,
-.xeokit-hideAllStoreys.xeokit-btn {
+.xeokit-hideAllStoreys.xeokit-btn,
+.xeokit-hideAllAnnotations.xeokit-btn {
     margin-left: 45px;
 }
 
@@ -253,9 +254,11 @@
 .xeokit-showAllObjects .btn-img-div img,
 .xeokit-showAllClasses .btn-img-div img,
 .xeokit-showAllStoreys .btn-img-div img,
+.xeokit-showAllAnnotations .btn-img-div img,
 .xeokit-hideAllObjects .btn-img-div img,
 .xeokit-hideAllClasses .btn-img-div img,
-.xeokit-hideAllStoreys .btn-img-div img {
+.xeokit-hideAllStoreys .btn-img-div img, 
+.xeokit-hideAllAnnotations .btn-img-div img {
     width: 24px;
 }
 
@@ -484,6 +487,88 @@
 }
 
 .xeokit-storeysTab .highlighted-node a {
+    transform: translateX(-10px) !important;
+}
+
+.xeokit-annotationsTab ul {
+    list-style: none;
+    padding-left: 1.75em;
+}
+
+.xeokit-annotationsTab ul li {
+    margin: 2px 0;
+    position: relative;
+    width: 370px;
+    line-height: 3ex;
+    padding: 5px;
+}
+
+.xeokit-annotationsTab ul li a {
+    background-color: #eee;
+    border-radius: 50%;
+    color: #000;
+    display: inline-block;
+    height: 1.5em;
+    left: -1.5em;
+    /*line-height: 1.5em;*/
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
+    width: 1.5em;
+}
+
+.xeokit-annotationsTab ul li a.plus {
+    /* background-color: #ded; */
+    background-color: transparent;
+    border: 2px solid rgb(253, 218,37);
+    color: rgb(253, 218,37);
+}
+
+.xeokit-annotationsTab ul li a.minus {
+    /* background-color: #eee; */
+    background-color: transparent;
+    border: 2px solid rgb(253, 218,37);
+    color: rgb(253, 218,37);
+}
+
+.xeokit-annotationsTab ul li a:active {
+    top: 4px;
+}
+
+.xeokit-annotationsTab ul li input {
+    vertical-align: middle;
+}
+
+.xeokit-annotationsTab ul li span {
+    display: inline-block;
+    width: calc(100% - 50px);
+    padding-left: 2px;
+    vertical-align: middle;
+}
+
+.xeokit-annotationsTab ul li span:hover {
+    color: white;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.2);
+    padding-left: 2px;
+}
+
+.xeokit-annotationsTab .top-right {
+    font-size: small;
+    position: fixed;
+    right: 1em;
+    top: 1em;
+}
+
+.xeokit-annotationsTab .highlighted-node { /* Appearance of node highlighted with BIMViewer#showObjectInExplorers() */
+    border: black solid 1px;
+    background: #A7A9AB;
+    color: black;
+    padding-left: 1px;
+    padding-right: 5px;
+}
+
+.xeokit-annotationsTab .highlighted-node a {
     transform: translateX(-10px) !important;
 }
 
@@ -723,14 +808,6 @@
 }
 
 
-.annotation-marker {
-    font-family: 'Montserrat', sans-serif !important;
-    color: black !important;
-    background-color: white !important;
-    border: 2px solid red !important;
-    box-shadow: none !important;
-}
-
 #xeokit_close_btn {
     position: fixed;
     right: 20px;
@@ -806,7 +883,41 @@
     padding: 2px 14px;
     margin: 20px 2px
 }
-
+.xeokit-annotations ul li {
+    list-style-type: none;
+}
+.annotation-item-content .annotation-item-glyp {
+    font-family: 'Montserrat', sans-serif !important;
+    color: black !important;
+    background-color: white !important;
+    border: 2px solid red !important;
+    box-shadow: none !important;
+    border-radius: 15px;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    float: left;
+    margin-right: 5px;
+}
+.annotation-item-content .annotation-item-titl {
+    font: normal 16px 'Montserrat', sans-serif !important;
+    margin-bottom: 4px;
+    border: none;
+    font-weight: 600 !important;
+    margin-bottom: 0px !important;
+    resize: none;
+}
+.annotation-item-content .annotation-item-desc {
+    text-align: left;
+    font-size: 12px;
+}
+.annotation-marker {
+    font-family: 'Montserrat', sans-serif !important;
+    color: black !important;
+    background-color: white !important;
+    border: 2px solid red !important;
+    box-shadow: none !important;
+}
 .annotation-label {
     font-family: 'Montserrat', sans-serif;
     box-shadow: none !important;
